@@ -4,7 +4,7 @@ A sleek and powerful **AI-powered chatbot** built using **Flask (Python)** for t
 It features a **modern dark-themed interface**, **smart conversational logic**, and optional integration with the **OpenAI API** for intelligent responses.  
 
 🌐 **Live Demo:**  
-👉 [ai-chatbot-webapp-yxga.onrender.com](https://ai-chatbot-webapp-yxga.onrender.com)
+👉 [ai-chatbot-webapp-yxga.onrender.com](https://ai-chatbot-webapp-ymga.onrender.com)
 
 ---
 
