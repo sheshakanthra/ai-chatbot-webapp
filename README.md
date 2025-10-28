@@ -3,8 +3,8 @@
 A simple yet powerful **AI-powered chatbot website** built with **Flask (Python)** for the backend and **HTML/CSS/JS** for the frontend.  
 It features a clean **dark-themed UI**, rule-based responses, and optional integration with the **OpenAI API** for smarter replies.
 
-🌐 **Live Demo:** 🌐 **Live Demo:**  
-👉 (https://ai-chatbot-webapp-yxga.onrender.com)
+🌐 **Live Demo:** ## 
+👉 [Click here to try the chatbot!](https://ai-chatbot-webapp-yxga.onrender.com)
 
 
 ---
