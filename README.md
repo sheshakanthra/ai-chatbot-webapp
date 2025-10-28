@@ -1,12 +1,18 @@
-# 🤖 Shesh's AI Chatbot Web App
+# 🤖 Shesh's AI Chatbot Web App  
 
-A simple yet powerful **AI-powered chatbot website** built with **Flask (Python)** for the backend and **HTML/CSS/JS** for the frontend.  
-It features a clean **dark-themed UI**, rule-based responses, and optional integration with the **OpenAI API** for smarter replies.
+A sleek and powerful **AI-powered chatbot** built using **Flask (Python)** for the backend and **HTML, CSS, JavaScript** for the frontend.  
+It features a **modern dark-themed interface**, **smart conversational logic**, and optional integration with the **OpenAI API** for intelligent responses.  
 
-🌐 **Live Demo:** ## 
-[![Live on Render](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge&logo=render)](https://ai-chatbot-webapp-yxga.onrender.com)
+🌐 **Live Demo:**  
+👉 [ai-chatbot-webapp-yxga.onrender.com](https://ai-chatbot-webapp-yxga.onrender.com)
 
+---
 
+### 🧠 Key Highlights
+- Interactive, minimal, and responsive chat UI  
+- Rule-based chatbot with optional AI integration  
+- Deployed seamlessly on **Render Cloud Platform**  
+- Built entirely with open-source tools  
 
 ---
 
