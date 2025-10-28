@@ -1,4 +1,3 @@
-# app.py
 import os
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from datetime import datetime
@@ -7,8 +6,8 @@ import logging
 # Optional OpenAI import (only used if OPENAI_API_KEY is set)
 USE_OPENAI = bool(os.getenv("OPENAI_API_KEY"))
 if USE_OPENAI:
-    import openai
-    openai.api_key = os.getenv("OPENAI_API_KEY")
+    from openai import OpenAI
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 
@@ -34,7 +33,7 @@ def get_reply():
     # If OpenAI key present, call ChatCompletion (gpt-3.5/gpt-4 if available)
     if USE_OPENAI:
         try:
-            resp = openai.ChatCompletion.create(
+            resp = client.chat.completions.create(
                 model=os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
@@ -43,7 +42,7 @@ def get_reply():
                 temperature=0.7,
                 max_tokens=512,
             )
-            reply = resp["choices"][0]["message"]["content"].strip()
+            reply = resp.choices[0].message.content.strip()
             return jsonify({"reply": reply, "source": "openai"})
         except Exception as e:
             app.logger.exception("OpenAI API error")
