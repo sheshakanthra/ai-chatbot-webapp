@@ -18,7 +18,7 @@ It can also integrate with the **OpenAI API** for smart responses.
 
 ```bash
 # 1. Clone repo
-git clone https://github.com/<your-username>/ai-chatbot-webapp.git
+git clone https://github.com/<sheshakanthra>/ai-chatbot-webapp.git
 cd ai-chatbot-webapp/backend
 
 # 2. Create virtual environment
