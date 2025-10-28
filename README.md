@@ -1,34 +1,36 @@
-# 🤖 AI Chatbot Web App
+# 🤖 Shesh's AI Chatbot Web App
 
-A simple **AI-powered chatbot website** built using **Flask (Python)** for backend and **HTML/CSS/JS** for the frontend.  
-It can also integrate with the **OpenAI API** for smart responses.
+A simple yet powerful **AI-powered chatbot website** built with **Flask (Python)** for the backend and **HTML/CSS/JS** for the frontend.  
+It features a clean **dark-themed UI**, rule-based responses, and optional integration with the **OpenAI API** for smarter replies.
+
+🌐 **Live Demo:** [ai-chatbot-webapp-ymga.onrender.com](https://ai-chatbot-webapp-ymga.onrender.com)
 
 ---
 
-## 🧩 Features
-- Flask backend with REST API endpoint `/get`
-- Interactive chat interface
-- Simple rule-based chatbot or optional GPT-based responses
-- Responsive dark-themed UI
-- Ready for deployment on Render / Heroku
+## 🧩 Tech Stack
+
+| Layer | Technology Used |
+|-------|-----------------|
+| **Frontend** | HTML, CSS, JavaScript |
+| **Backend** | Python (Flask) |
+| **AI Integration** | OpenAI API *(optional)* |
+| **Deployment** | Render Cloud Platform |
+
+---
+
+## ✨ Features
+
+- 💬 Interactive and minimal chat interface  
+- 🧠 Rule-based chatbot logic (offline mode)  
+- 🤖 GPT-based intelligent replies (if OpenAI key is provided)  
+- 🌙 Dark-themed responsive UI  
+- ☁️ Deployed and hosted live on Render  
 
 ---
 
 ## 🚀 How to Run Locally
 
+### 1️⃣ Clone this repository
 ```bash
-# 1. Clone repo
-git clone https://github.com/<sheshakanthra>/ai-chatbot-webapp.git
-cd ai-chatbot-webapp/backend
-
-# 2. Create virtual environment
-python -m venv venv
-source venv/bin/activate   # or venv\Scripts\activate on Windows
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Run the app
-python backendapp.py
-## 🌐 Live Demo
-Check it out here: [https://ai-chatbot-webapp-ymga.onrender.com](https://ai-chatbot-webapp-ymga.onrender.com)
+git clone https://github.com/sheshakanthra/ai-chatbot-webapp.git
+cd ai-chatbot-webapp/backend/backend
