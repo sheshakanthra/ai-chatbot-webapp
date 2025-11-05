@@ -1,20 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Shesh's AI Chatbot</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="chat-container">
-    <h2>🤖 Shesh's AI Chatbot</h2>
-    <div id="chat-box" aria-live="polite"></div>
-    <div class="input-row">
-      <input id="user-input" placeholder="Type a message..." autocomplete="off" />
-      <button id="send-btn">Send</button>
-    </div>
+
+  <div class="wa-app">
+    <!-- Left header (title) -->
+    <header class="wa-header">
+      <div class="title">
+        <span class="avatar">🤖</span>
+        <div>
+          <h1>Shesh's AI Chat</h1>
+          <p class="status">online</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="new-chat" title="New chat">＋</button>
+        <button class="icon-btn" id="theme-toggle" title="Toggle theme">🌙</button>
+      </div>
+    </header>
+
+    <!-- Chat area -->
+    <main id="chat-box" class="wa-chat">
+      <!-- Example message (remove if you want) -->
+      <div class="msg bot">
+        <div class="bubble">
+          <div class="text">Hey there! I'm your chatbot. How can I help today?</div>
+          <div class="meta"><span class="time"></span></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Composer -->
+    <form class="wa-composer" id="composer" onsubmit="return false;">
+      <button class="icon-btn" type="button" title="Emoji">😊</button>
+      <input id="user-input" type="text" placeholder="Type a message…" autocomplete="off" />
+      <button id="send-btn" class="send-btn" type="button">Send</button>
+    </form>
   </div>
 
-  <script src="/static/script.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

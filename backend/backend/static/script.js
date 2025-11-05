@@ -1,104 +1,96 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const sendBtn = document.getElementById("send-btn");
-  const input = document.getElementById("user-input");
-  const chatBox = document.getElementById("chat-box");
+// WhatsApp-style chat: bubbles + typing + /get fetch
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("composer");
+  const input = document.getElementById("user-input");
+  const sendBtn = document.getElementById("send-btn");
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    sendMessage();
-  });
-
+  form.addEventListener("submit", (e)=>{ e.preventDefault(); sendMessage(); });
   sendBtn.addEventListener("click", sendMessage);
+  input.addEventListener("keydown", (e)=>{ if(e.key==="Enter") sendMessage(); });
 
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      sendMessage();
-    }
-  });
-
-  document.querySelectorAll(".chip").forEach(chip => {
-    chip.addEventListener("click", () => {
-      input.value = chip.textContent;
-      sendMessage();
-    });
-  });
+  // stamp times for any static bubbles on load
+  document.querySelectorAll(".msg .meta .time").forEach(el=> el.textContent = now());
 });
 
-function addBubble(sender, text, typing = false) {
-  const row = document.createElement("div");
-  row.className = `msg-row ${sender}`;
+function now(){
+  const d = new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+}
 
-  const avatar = `<div class="avatar">${sender === "user" ? "🧑" : "🤖"}</div>`;
-  let bubble;
+function appendBubble(sender, text, typing=false){
+  const chat = document.getElementById("chat-box");
 
-  if (typing) {
-    bubble = `
-      <div class="bubble">
-        <span class="typing">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </span>
+  const msg = document.createElement("div");
+  msg.className = `msg ${sender}`;
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+
+  if(typing){
+    bubble.innerHTML = `
+      <div class="text typing">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
       </div>
+      <div class="meta"><span class="time">${now()}</span></div>
     `;
-  } else {
-    bubble = `<div class="bubble">${text}</div>`;
+  }else{
+    bubble.innerHTML = `
+      <div class="text"></div>
+      <div class="meta"><span class="time">${now()}</span></div>
+    `;
+    bubble.querySelector(".text").textContent = text;
   }
 
-  row.innerHTML = avatar + bubble;
-  chatBox.appendChild(row);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  msg.appendChild(bubble);
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
 }
 
-async function typeReply(text) {
-  const chatBox = document.getElementById("chat-box");
-  const lastBubble = chatBox.querySelector(".msg-row.bot:last-child .bubble");
-
-  lastBubble.textContent = "";
-
-  for (let char of text) {
-    lastBubble.textContent += char;
-    chatBox.scrollTop = chatBox.scrollHeight;
-    await new Promise(r => setTimeout(r, 10));
+async function typeIntoLastBot(text){
+  const chat = document.getElementById("chat-box");
+  const last = chat.querySelector(".msg.bot:last-child .text");
+  if(!last) return;
+  last.textContent = "";
+  for(const ch of text){
+    last.textContent += ch;
+    chat.scrollTop = chat.scrollHeight;
+    await new Promise(r=>setTimeout(r, 8)); // typing speed
   }
 }
 
-async function sendMessage() {
+async function sendMessage(){
   const input = document.getElementById("user-input");
   const text = input.value.trim();
-  if (!text) return;
+  if(!text) return;
 
-  addBubble("user", text);
+  // user bubble
+  appendBubble("user", text);
   input.value = "";
 
-  // Show typing indicator
-  addBubble("bot", "", true);
+  // bot typing bubble
+  appendBubble("bot", "", true);
 
-  try {
+  try{
     const res = await fetch("/get", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ message: text })
     });
-
     const data = await res.json();
 
-    // Remove typing dot bubble
-    const chatBox = document.getElementById("chat-box");
-    const lastBot = chatBox.querySelector(".msg-row.bot:last-child");
-    if (lastBot) lastBot.remove();
+    // remove typing
+    const chat = document.getElementById("chat-box");
+    const typing = chat.querySelector(".msg.bot:last-child");
+    if(typing) typing.remove();
 
-    // Add new bubble for reply
-    addBubble("bot", "");
-    await typeReply(data.reply || "⚠️ No reply");
-  } catch (err) {
+    // place a clean bubble and type into it
+    appendBubble("bot", "");
+    await typeIntoLastBot((data && data.reply) ? data.reply : "Hmm, no reply yet.");
+  }catch(err){
     console.error(err);
-
-    const chatBox = document.getElementById("chat-box");
-    const lastBot = chatBox.querySelector(".msg-row.bot:last-child");
-    if (lastBot) lastBot.remove();
-
-    addBubble("bot", "❌ Error — server not responding");
+    const chat = document.getElementById("chat-box");
+    const typing = chat.querySelector(".msg.bot:last-child");
+    if(typing) typing.remove();
+    appendBubble("bot", "❌ Network error. Please try again.");
   }
 }
