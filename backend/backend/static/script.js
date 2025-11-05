@@ -2,19 +2,65 @@
 document.addEventListener("DOMContentLoaded", function () {
   const sendBtn = document.getElementById("send-btn");
   const input = document.getElementById("user-input");
+
   sendBtn.addEventListener("click", sendMessage);
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") sendMessage();
   });
+
+  // Chips click send
+  document.querySelectorAll(".chip").forEach(c => {
+    c.addEventListener("click", () => {
+      input.value = c.textContent;
+      sendMessage();
+    });
+  });
 });
 
-function addMessage(sender, text) {
+// ✅ new addMessage (bubble + avatar)
+function addMessage(sender, text, typing = false) {
   const chatBox = document.getElementById("chat-box");
-  const p = document.createElement("div");
-  p.className = "msg " + (sender === "user" ? "user" : "bot");
-  p.textContent = text;
-  chatBox.appendChild(p);
+
+  const row = document.createElement("div");
+  row.className = `msg-row ${sender}`;
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = sender === "user" ? "🧑" : "🤖";
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+
+  if (typing) {
+    bubble.innerHTML = `
+      <span class="typing">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </span>`;
+  } else {
+    bubble.textContent = text;
+  }
+
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  chatBox.appendChild(row);
+
   chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// ✅ streaming response typing animation
+async function typeReply(fullText) {
+  const chatBox = document.getElementById("chat-box");
+  const lastBubble = chatBox.querySelector(".msg-row.bot:last-child .bubble");
+
+  lastBubble.textContent = ""; // clear typing dots effect first
+
+  for (let i = 0; i < fullText.length; i++) {
+    lastBubble.textContent += fullText[i];
+    chatBox.scrollTop = chatBox.scrollHeight;
+    await new Promise(res => setTimeout(res, 8)); // typing speed here
+  }
 }
 
 async function sendMessage() {
@@ -22,9 +68,12 @@ async function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
+  // user bubble
   addMessage("user", text);
   input.value = "";
-  addMessage("bot", "⏳ typing...");
+
+  // bot typing bubble
+  addMessage("bot", "", true);
 
   try {
     const res = await fetch("/get", {
@@ -33,18 +82,21 @@ async function sendMessage() {
       body: JSON.stringify({ message: text })
     });
     const data = await res.json();
-    // remove last "typing..." message
+
+    // remove typing bubble
     const chatBox = document.getElementById("chat-box");
-    const nodes = chatBox.querySelectorAll(".msg.bot");
-    if (nodes.length) nodes[nodes.length - 1].remove();
+    const typingRow = chatBox.querySelector(".msg-row.bot:last-child");
+    if (typingRow) typingRow.remove();
 
     if (data && data.reply) {
-      addMessage("bot", data.reply);
+      // append empty bubble first (to animate text into it)
+      addMessage("bot", "");
+      await typeReply(data.reply);
     } else {
-      addMessage("bot", "No reply from server — try again.");
+      addMessage("bot", "⚠️ No reply from server — try again.");
     }
   } catch (err) {
     console.error(err);
-    addMessage("bot", "Error contacting server. Check console.");
+    addMessage("bot", "❌ Server error — check console.");
   }
 }
