@@ -4,13 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatBox = document.getElementById("chat-box");
   const form = document.getElementById("composer");
 
-  // Guard in case the DOM structure changes — don't break other listeners
-  if (form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      sendMessage();
-    });
-  }
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    sendMessage();
+  });
 
   sendBtn.addEventListener("click", sendMessage);
 
